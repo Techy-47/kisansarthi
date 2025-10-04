@@ -311,4 +311,4 @@ For support, email support@kisansaathi.com or open an issue in the GitHub reposi
 
 ---
 
-Built with ❤️ for Indian farmers
+Built with ❤️ for Indian farmers by Aditya Raj
