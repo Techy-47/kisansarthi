@@ -591,430 +591,433 @@ export default function DashboardPage() {
       </Dialog>
 
       <Dialog open={showRecommendationModal} onOpenChange={setShowRecommendationModal}>
-        <DialogContent className="w-[98vw] h-[98vh] max-w-none overflow-y-auto p-8">
-          <DialogHeader className="space-y-3 pb-6">
-            <DialogTitle className="text-4xl font-bold leading-tight bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent flex items-center gap-3">
-              <motion.div
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-              >
-                <Sparkles className="h-10 w-10 text-green-600" />
-              </motion.div>
-              AI-Powered Farming Insights
-            </DialogTitle>
-            <DialogDescription className="text-lg flex items-center gap-2">
-              <Info className="h-5 w-5" />
-              Personalized recommendations based on weather, market trends, and your farm profile
-            </DialogDescription>
-          </DialogHeader>
-
-          <AnimatePresence mode="wait">
-            {isLoadingRecommendation ? (
-              <motion.div
-                key="loading"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex flex-col items-center justify-center py-24 space-y-8"
-              >
+        <DialogContent fullScreen className="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 overflow-hidden flex flex-col">
+          <div className="flex-1 overflow-y-auto p-6 md:p-10">
+            <DialogHeader className="space-y-3 pb-6 text-left max-w-7xl mx-auto">
+              <DialogTitle className="text-4xl md:text-5xl font-bold leading-tight bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent flex items-center gap-4">
                 <motion.div
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    rotate: [0, 180, 360],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                  }}
-                  className="relative"
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
                 >
-                  <div className="absolute inset-0 bg-green-400 rounded-full blur-xl opacity-50"></div>
-                  <Loader2 className="h-24 w-24 text-green-600 relative z-10" />
+                  <Sparkles className="h-10 w-10 md:h-14 md:w-14 text-green-600" />
                 </motion.div>
-                <div className="text-center space-y-4">
-                  <p className="text-2xl font-bold text-green-700">Analyzing Your Farm Data...</p>
-                  <p className="text-lg text-muted-foreground max-w-lg">
-                    Processing weather patterns, CEDA market data, and soil conditions
-                  </p>
-                </div>
-                <div className="flex gap-3">
-                  {[0, 1, 2, 3].map((i) => (
+                AI-Powered Farming Insights
+              </DialogTitle>
+              <DialogDescription className="text-lg md:text-xl flex items-start gap-3 max-w-4xl">
+                <Info className="h-5 w-5 md:h-6 md:w-6 mt-1 shrink-0" />
+                Personalized recommendations based on weather, market trends, and your farm profile
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="max-w-7xl mx-auto">
+              <AnimatePresence mode="wait">
+                {isLoadingRecommendation ? (
+                  <motion.div
+                    key="loading"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="flex flex-col items-center justify-center py-24 space-y-8"
+                  >
                     <motion.div
-                      key={i}
-                      className="w-5 h-5 bg-green-600 rounded-full"
                       animate={{
-                        scale: [1, 1.8, 1],
-                        opacity: [0.3, 1, 0.3],
+                        scale: [1, 1.2, 1],
+                        rotate: [0, 180, 360],
                       }}
                       transition={{
-                        duration: 1.5,
+                        duration: 2,
                         repeat: Number.POSITIVE_INFINITY,
-                        delay: i * 0.2,
+                        ease: "easeInOut",
                       }}
-                    />
-                  ))}
-                </div>
-              </motion.div>
-            ) : recommendationError ? (
-              <motion.div
-                key="error"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                className="py-20 text-center space-y-8"
-              >
-                <div className="flex justify-center">
-                  <div className="rounded-full bg-red-100 p-8 shadow-lg">
-                    <AlertTriangle className="h-20 w-20 text-red-600" />
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <h3 className="text-3xl font-bold text-red-900">Unable to Generate Recommendation</h3>
-                  <p className="text-red-600 text-xl max-w-md mx-auto">{recommendationError}</p>
-                </div>
-                <Button onClick={handleGetRecommendation} size="lg" className="gap-3 text-lg px-8 py-6">
-                  <Sparkles className="h-5 w-5" />
-                  Try Again
-                </Button>
-              </motion.div>
-            ) : recommendation ? (
-              <motion.div
-                key="content"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="space-y-6"
-              >
-                {/* Quick Stats Overview */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                  >
-                    <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-200">
-                      <CardContent className="pt-6">
-                        <div className="flex items-center gap-3">
-                          <div className="p-3 bg-blue-100 rounded-lg">
-                            <ThermometerSun className="h-6 w-6 text-blue-600" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">Weather Status</p>
-                            <p className="text-lg font-bold text-blue-900">{weatherData?.current?.temp || "--"}°C</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200">
-                      <CardContent className="pt-6">
-                        <div className="flex items-center gap-3">
-                          <div className="p-3 bg-green-100 rounded-lg">
-                            <Sprout className="h-6 w-6 text-green-600" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">Soil Type</p>
-                            <p className="text-lg font-bold text-green-900">{userProfile?.soilType || "N/A"}</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                  >
-                    <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200">
-                      <CardContent className="pt-6">
-                        <div className="flex items-center gap-3">
-                          <div className="p-3 bg-purple-100 rounded-lg">
-                            <MapPin className="h-6 w-6 text-purple-600" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">Location</p>
-                            <p className="text-lg font-bold text-purple-900">{userProfile?.state || "N/A"}</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                  >
-                    <Card className="bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200">
-                      <CardContent className="pt-6">
-                        <div className="flex items-center gap-3">
-                          <div className="p-3 bg-orange-100 rounded-lg">
-                            <TrendingUp className="h-6 w-6 text-orange-600" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">Market Data</p>
-                            <p className="text-lg font-bold text-orange-900">Live</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </div>
-
-                {/* Main Recommendation Content - Parsed into sections */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Crop Recommendations */}
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    <Card className="h-full border-2 border-green-200 shadow-lg hover:shadow-xl transition-shadow">
-                      <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50">
-                        <CardTitle className="flex items-center gap-3 text-green-900">
-                          <Leaf className="h-6 w-6" />
-                          Crop Recommendations
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="pt-6">
-                        <div className="space-y-4">
-                          <div className="prose prose-sm max-w-none">
-                            <ReactMarkdown
-                              components={{
-                                p: ({ children }) => <p className="text-gray-700 leading-relaxed mb-3">{children}</p>,
-                                ul: ({ children }) => <ul className="space-y-2 ml-4">{children}</ul>,
-                                li: ({ children }) => (
-                                  <li className="flex items-start gap-2">
-                                    <CheckCircle2 className="h-4 w-4 text-green-600 mt-1 flex-shrink-0" />
-                                    <span className="text-gray-700">{children}</span>
-                                  </li>
-                                ),
-                                strong: ({ children }) => (
-                                  <strong className="font-semibold text-green-800">{children}</strong>
-                                ),
-                              }}
-                            >
-                              {recommendation.split("\n\n").slice(0, 3).join("\n\n")}
-                            </ReactMarkdown>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-
-                  {/* Weather Impact */}
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.6 }}
-                  >
-                    <Card className="h-full border-2 border-blue-200 shadow-lg hover:shadow-xl transition-shadow">
-                      <CardHeader className="bg-gradient-to-r from-blue-50 to-cyan-50">
-                        <CardTitle className="flex items-center gap-3 text-blue-900">
-                          <Cloud className="h-6 w-6" />
-                          Weather Insights
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="pt-6">
-                        <div className="space-y-4">
-                          {weatherData && (
-                            <div className="grid grid-cols-2 gap-3 mb-4">
-                              <div className="bg-blue-50 rounded-lg p-3">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <Droplets className="h-4 w-4 text-blue-600" />
-                                  <span className="text-xs font-medium text-blue-700">Humidity</span>
-                                </div>
-                                <p className="text-xl font-bold text-blue-900">{weatherData.current.humidity}%</p>
-                              </div>
-                              <div className="bg-blue-50 rounded-lg p-3">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <Wind className="h-4 w-4 text-blue-600" />
-                                  <span className="text-xs font-medium text-blue-700">Wind</span>
-                                </div>
-                                <p className="text-xl font-bold text-blue-900">{weatherData.current.windSpeed} km/h</p>
-                              </div>
-                            </div>
-                          )}
-                          <div className="prose prose-sm max-w-none">
-                            <ReactMarkdown
-                              components={{
-                                p: ({ children }) => <p className="text-gray-700 leading-relaxed mb-3">{children}</p>,
-                                ul: ({ children }) => <ul className="space-y-2 ml-4">{children}</ul>,
-                                li: ({ children }) => (
-                                  <li className="flex items-start gap-2">
-                                    <CheckCircle2 className="h-4 w-4 text-blue-600 mt-1 flex-shrink-0" />
-                                    <span className="text-gray-700">{children}</span>
-                                  </li>
-                                ),
-                              }}
-                            >
-                              {recommendation.split("\n\n").slice(3, 6).join("\n\n")}
-                            </ReactMarkdown>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-
-                  {/* Market Insights */}
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.7 }}
-                  >
-                    <Card className="h-full border-2 border-orange-200 shadow-lg hover:shadow-xl transition-shadow">
-                      <CardHeader className="bg-gradient-to-r from-orange-50 to-amber-50">
-                        <CardTitle className="flex items-center gap-3 text-orange-900">
-                          <DollarSign className="h-6 w-6" />
-                          Market Insights
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="pt-6">
-                        <div className="space-y-4">
-                          {marketData.length > 0 && (
-                            <div className="grid grid-cols-2 gap-2 mb-4">
-                              {marketData.slice(0, 4).map((item, idx) => (
-                                <div key={idx} className="bg-orange-50 rounded-lg p-2">
-                                  <p className="text-xs text-muted-foreground">{item.commodity}</p>
-                                  <p className="text-sm font-bold text-orange-900">₹{item.price}</p>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          <div className="prose prose-sm max-w-none">
-                            <ReactMarkdown
-                              components={{
-                                p: ({ children }) => <p className="text-gray-700 leading-relaxed mb-3">{children}</p>,
-                                ul: ({ children }) => <ul className="space-y-2 ml-4">{children}</ul>,
-                                li: ({ children }) => (
-                                  <li className="flex items-start gap-2">
-                                    <TrendingUp className="h-4 w-4 text-orange-600 mt-1 flex-shrink-0" />
-                                    <span className="text-gray-700">{children}</span>
-                                  </li>
-                                ),
-                              }}
-                            >
-                              {recommendation.split("\n\n").slice(6, 9).join("\n\n")}
-                            </ReactMarkdown>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-
-                  {/* Action Items */}
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.8 }}
-                  >
-                    <Card className="h-full border-2 border-purple-200 shadow-lg hover:shadow-xl transition-shadow">
-                      <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50">
-                        <CardTitle className="flex items-center gap-3 text-purple-900">
-                          <Lightbulb className="h-6 w-6" />
-                          Action Items
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="pt-6">
-                        <div className="space-y-3">
-                          <div className="prose prose-sm max-w-none">
-                            <ReactMarkdown
-                              components={{
-                                p: ({ children }) => <p className="text-gray-700 leading-relaxed mb-3">{children}</p>,
-                                ul: ({ children }) => <ul className="space-y-3">{children}</ul>,
-                                li: ({ children }) => (
-                                  <motion.li
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    className="flex items-start gap-3 bg-white rounded-lg p-3 shadow-sm border border-purple-100"
-                                  >
-                                    <div className="mt-0.5 p-1 bg-purple-100 rounded">
-                                      <CheckCircle2 className="h-4 w-4 text-purple-600" />
-                                    </div>
-                                    <span className="text-gray-700 flex-1">{children}</span>
-                                  </motion.li>
-                                ),
-                                strong: ({ children }) => (
-                                  <strong className="font-semibold text-purple-800">{children}</strong>
-                                ),
-                              }}
-                            >
-                              {recommendation.split("\n\n").slice(9).join("\n\n")}
-                            </ReactMarkdown>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </div>
-
-                {/* Full Recommendation Expandable Section */}
-                <Card className="border-2 border-gray-200">
-                  <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
-                    <CardTitle className="flex items-center gap-2 text-gray-900">
-                      <Info className="h-5 w-5" />
-                      View Complete Recommendation
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-6 max-h-96 overflow-y-auto">
-                      <div className="prose prose-sm max-w-none">
-                        <ReactMarkdown
-                          components={{
-                            h1: ({ children }) => (
-                              <h1 className="text-2xl font-bold mt-6 mb-3 text-gray-800 flex items-center gap-2">
-                                <Lightbulb className="h-6 w-6" />
-                                {children}
-                              </h1>
-                            ),
-                            h2: ({ children }) => (
-                              <h2 className="text-xl font-bold mt-5 mb-3 text-gray-700">{children}</h2>
-                            ),
-                            h3: ({ children }) => (
-                              <h3 className="text-lg font-semibold mt-4 mb-2 text-gray-600">{children}</h3>
-                            ),
-                            p: ({ children }) => <p className="mb-3 leading-relaxed text-gray-700">{children}</p>,
-                            ul: ({ children }) => <ul className="space-y-2 mb-4 ml-4">{children}</ul>,
-                            li: ({ children }) => (
-                              <li className="flex items-start gap-2">
-                                <span className="text-green-600 mt-1">•</span>
-                                <span className="text-gray-700">{children}</span>
-                              </li>
-                            ),
-                            strong: ({ children }) => (
-                              <strong className="font-semibold text-gray-800">{children}</strong>
-                            ),
+                      className="relative"
+                    >
+                      <div className="absolute inset-0 bg-green-400 rounded-full blur-xl opacity-50"></div>
+                      <Loader2 className="h-24 w-24 text-green-600 relative z-10" />
+                    </motion.div>
+                    <div className="text-center space-y-4">
+                      <p className="text-2xl font-bold text-green-700">Analyzing Your Farm Data...</p>
+                      <p className="text-lg text-muted-foreground max-w-lg">
+                        Processing weather patterns, CEDA market data, and soil conditions
+                      </p>
+                    </div>
+                    <div className="flex gap-3">
+                      {[0, 1, 2, 3].map((i) => (
+                        <motion.div
+                          key={i}
+                          className="w-5 h-5 bg-green-600 rounded-full"
+                          animate={{
+                            scale: [1, 1.8, 1],
+                            opacity: [0.3, 1, 0.3],
                           }}
-                        >
-                          {recommendation}
-                        </ReactMarkdown>
+                          transition={{
+                            duration: 1.5,
+                            repeat: Number.POSITIVE_INFINITY,
+                            delay: i * 0.2,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </motion.div>
+                ) : recommendationError ? (
+                  <motion.div
+                    key="error"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="py-20 text-center space-y-8"
+                  >
+                    <div className="flex justify-center">
+                      <div className="rounded-full bg-red-100 p-8 shadow-lg">
+                        <AlertTriangle className="h-20 w-20 text-red-600" />
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                    <div className="space-y-3">
+                      <h3 className="text-3xl font-bold text-red-900">Unable to Generate Recommendation</h3>
+                      <p className="text-red-600 text-xl max-w-md mx-auto">{recommendationError}</p>
+                    </div>
+                    <Button onClick={handleGetRecommendation} size="lg" className="gap-3 text-lg px-8 py-6">
+                      <Sparkles className="h-5 w-5" />
+                      Try Again
+                    </Button>
+                  </motion.div>
+                ) : recommendation ? (
+                  <motion.div
+                    key="content"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-6"
+                  >
+                    {/* Quick Stats Overview */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                      >
+                        <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-200">
+                          <CardContent className="pt-6">
+                            <div className="flex items-center gap-3">
+                              <div className="p-3 bg-blue-100 rounded-lg">
+                                <ThermometerSun className="h-6 w-6 text-blue-600" />
+                              </div>
+                              <div>
+                                <p className="text-sm text-muted-foreground">Weather Status</p>
+                                <p className="text-lg font-bold text-blue-900">{weatherData?.current?.temp || "--"}°C</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
 
-                <Separator />
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                      >
+                        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200">
+                          <CardContent className="pt-6">
+                            <div className="flex items-center gap-3">
+                              <div className="p-3 bg-green-100 rounded-lg">
+                                <Sprout className="h-6 w-6 text-green-600" />
+                              </div>
+                              <div>
+                                <p className="text-sm text-muted-foreground">Soil Type</p>
+                                <p className="text-lg font-bold text-green-900">{userProfile?.soilType || "N/A"}</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
 
-                <div className="flex gap-4 justify-end pt-2">
-                  <Button variant="outline" size="lg" onClick={() => setShowRecommendationModal(false)}>
-                    Close
-                  </Button>
-                  <Button size="lg" onClick={handleGetRecommendation} className="gap-2">
-                    <Sparkles className="h-5 w-5" />
-                    Generate New Recommendation
-                  </Button>
-                </div>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                      >
+                        <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200">
+                          <CardContent className="pt-6">
+                            <div className="flex items-center gap-3">
+                              <div className="p-3 bg-purple-100 rounded-lg">
+                                <MapPin className="h-6 w-6 text-purple-600" />
+                              </div>
+                              <div>
+                                <p className="text-sm text-muted-foreground">Location</p>
+                                <p className="text-lg font-bold text-purple-900">{userProfile?.state || "N/A"}</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                      >
+                        <Card className="bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200">
+                          <CardContent className="pt-6">
+                            <div className="flex items-center gap-3">
+                              <div className="p-3 bg-orange-100 rounded-lg">
+                                <TrendingUp className="h-6 w-6 text-orange-600" />
+                              </div>
+                              <div>
+                                <p className="text-sm text-muted-foreground">Market Data</p>
+                                <p className="text-lg font-bold text-orange-900">Live</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    </div>
+
+                    {/* Main Recommendation Content - Parsed into sections */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {/* Crop Recommendations */}
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.5 }}
+                      >
+                        <Card className="h-full border-2 border-green-200 shadow-lg hover:shadow-xl transition-shadow">
+                          <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50">
+                            <CardTitle className="flex items-center gap-3 text-green-900">
+                              <Leaf className="h-6 w-6" />
+                              Crop Recommendations
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="pt-6">
+                            <div className="space-y-4">
+                              <div className="prose prose-sm max-w-none">
+                                <ReactMarkdown
+                                  components={{
+                                    p: ({ children }) => <p className="text-gray-700 leading-relaxed mb-3">{children}</p>,
+                                    ul: ({ children }) => <ul className="space-y-2 ml-4">{children}</ul>,
+                                    li: ({ children }) => (
+                                      <li className="flex items-start gap-2">
+                                        <CheckCircle2 className="h-4 w-4 text-green-600 mt-1 flex-shrink-0" />
+                                        <span className="text-gray-700">{children}</span>
+                                      </li>
+                                    ),
+                                    strong: ({ children }) => (
+                                      <strong className="font-semibold text-green-800">{children}</strong>
+                                    ),
+                                  }}
+                                >
+                                  {recommendation.split("\n\n").slice(0, 3).join("\n\n")}
+                                </ReactMarkdown>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+
+                      {/* Weather Impact */}
+                      <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.6 }}
+                      >
+                        <Card className="h-full border-2 border-blue-200 shadow-lg hover:shadow-xl transition-shadow">
+                          <CardHeader className="bg-gradient-to-r from-blue-50 to-cyan-50">
+                            <CardTitle className="flex items-center gap-3 text-blue-900">
+                              <Cloud className="h-6 w-6" />
+                              Weather Insights
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="pt-6">
+                            <div className="space-y-4">
+                              {weatherData && (
+                                <div className="grid grid-cols-2 gap-3 mb-4">
+                                  <div className="bg-blue-50 rounded-lg p-3">
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <Droplets className="h-4 w-4 text-blue-600" />
+                                      <span className="text-xs font-medium text-blue-700">Humidity</span>
+                                    </div>
+                                    <p className="text-xl font-bold text-blue-900">{weatherData.current.humidity}%</p>
+                                  </div>
+                                  <div className="bg-blue-50 rounded-lg p-3">
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <Wind className="h-4 w-4 text-blue-600" />
+                                      <span className="text-xs font-medium text-blue-700">Wind</span>
+                                    </div>
+                                    <p className="text-xl font-bold text-blue-900">{weatherData.current.windSpeed} km/h</p>
+                                  </div>
+                                </div>
+                              )}
+                              <div className="prose prose-sm max-w-none">
+                                <ReactMarkdown
+                                  components={{
+                                    p: ({ children }) => <p className="text-gray-700 leading-relaxed mb-3">{children}</p>,
+                                    ul: ({ children }) => <ul className="space-y-2 ml-4">{children}</ul>,
+                                    li: ({ children }) => (
+                                      <li className="flex items-start gap-2">
+                                        <CheckCircle2 className="h-4 w-4 text-blue-600 mt-1 flex-shrink-0" />
+                                        <span className="text-gray-700">{children}</span>
+                                      </li>
+                                    ),
+                                  }}
+                                >
+                                  {recommendation.split("\n\n").slice(3, 6).join("\n\n")}
+                                </ReactMarkdown>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+
+                      {/* Market Insights */}
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.7 }}
+                      >
+                        <Card className="h-full border-2 border-orange-200 shadow-lg hover:shadow-xl transition-shadow">
+                          <CardHeader className="bg-gradient-to-r from-orange-50 to-amber-50">
+                            <CardTitle className="flex items-center gap-3 text-orange-900">
+                              <DollarSign className="h-6 w-6" />
+                              Market Insights
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="pt-6">
+                            <div className="space-y-4">
+                              {marketData.length > 0 && (
+                                <div className="grid grid-cols-2 gap-2 mb-4">
+                                  {marketData.slice(0, 4).map((item, idx) => (
+                                    <div key={idx} className="bg-orange-50 rounded-lg p-2">
+                                      <p className="text-xs text-muted-foreground">{item.commodity}</p>
+                                      <p className="text-sm font-bold text-orange-900">₹{item.price}</p>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              <div className="prose prose-sm max-w-none">
+                                <ReactMarkdown
+                                  components={{
+                                    p: ({ children }) => <p className="text-gray-700 leading-relaxed mb-3">{children}</p>,
+                                    ul: ({ children }) => <ul className="space-y-2 ml-4">{children}</ul>,
+                                    li: ({ children }) => (
+                                      <li className="flex items-start gap-2">
+                                        <TrendingUp className="h-4 w-4 text-orange-600 mt-1 flex-shrink-0" />
+                                        <span className="text-gray-700">{children}</span>
+                                      </li>
+                                    ),
+                                  }}
+                                >
+                                  {recommendation.split("\n\n").slice(6, 9).join("\n\n")}
+                                </ReactMarkdown>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+
+                      {/* Action Items */}
+                      <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.8 }}
+                      >
+                        <Card className="h-full border-2 border-purple-200 shadow-lg hover:shadow-xl transition-shadow">
+                          <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50">
+                            <CardTitle className="flex items-center gap-3 text-purple-900">
+                              <Lightbulb className="h-6 w-6" />
+                              Action Items
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="pt-6">
+                            <div className="space-y-3">
+                              <div className="prose prose-sm max-w-none">
+                                <ReactMarkdown
+                                  components={{
+                                    p: ({ children }) => <p className="text-gray-700 leading-relaxed mb-3">{children}</p>,
+                                    ul: ({ children }) => <ul className="space-y-3">{children}</ul>,
+                                    li: ({ children }) => (
+                                      <motion.li
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        className="flex items-start gap-3 bg-white rounded-lg p-3 shadow-sm border border-purple-100"
+                                      >
+                                        <div className="mt-0.5 p-1 bg-purple-100 rounded">
+                                          <CheckCircle2 className="h-4 w-4 text-purple-600" />
+                                        </div>
+                                        <span className="text-gray-700 flex-1">{children}</span>
+                                      </motion.li>
+                                    ),
+                                    strong: ({ children }) => (
+                                      <strong className="font-semibold text-purple-800">{children}</strong>
+                                    ),
+                                  }}
+                                >
+                                  {recommendation.split("\n\n").slice(9).join("\n\n")}
+                                </ReactMarkdown>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    </div>
+
+                    {/* Full Recommendation Expandable Section */}
+                    <Card className="border-2 border-gray-200">
+                      <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
+                        <CardTitle className="flex items-center gap-2 text-gray-900">
+                          <Info className="h-5 w-5" />
+                          View Complete Recommendation
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-6 max-h-96 overflow-y-auto">
+                          <div className="prose prose-sm max-w-none">
+                            <ReactMarkdown
+                              components={{
+                                h1: ({ children }) => (
+                                  <h1 className="text-2xl font-bold mt-6 mb-3 text-gray-800 flex items-center gap-2">
+                                    <Lightbulb className="h-6 w-6" />
+                                    {children}
+                                  </h1>
+                                ),
+                                h2: ({ children }) => (
+                                  <h2 className="text-xl font-bold mt-5 mb-3 text-gray-700">{children}</h2>
+                                ),
+                                h3: ({ children }) => (
+                                  <h3 className="text-lg font-semibold mt-4 mb-2 text-gray-600">{children}</h3>
+                                ),
+                                p: ({ children }) => <p className="mb-3 leading-relaxed text-gray-700">{children}</p>,
+                                ul: ({ children }) => <ul className="space-y-2 mb-4 ml-4">{children}</ul>,
+                                li: ({ children }) => (
+                                  <li className="flex items-start gap-2">
+                                    <span className="text-green-600 mt-1">•</span>
+                                    <span className="text-gray-700">{children}</span>
+                                  </li>
+                                ),
+                                strong: ({ children }) => (
+                                  <strong className="font-semibold text-gray-800">{children}</strong>
+                                ),
+                              }}
+                            >
+                              {recommendation}
+                            </ReactMarkdown>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Separator />
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
+            </div>
+          </div>
+          <div className="border-t bg-white/70 backdrop-blur-sm p-4 flex justify-end gap-4 sticky bottom-0">
+            <Button variant="outline" size="lg" onClick={() => setShowRecommendationModal(false)}>
+              Close
+            </Button>
+            <Button size="lg" onClick={handleGetRecommendation} className="gap-2">
+              <Sparkles className="h-5 w-5" />
+              Generate New Recommendation
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
