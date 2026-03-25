@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     const mimeType = matches[1]
     const base64Data = matches[2]
 
-    const apiKey = process.env.AIzaSyDzj7CrXr2xmHACyPQrHZC42ovCN3MMmMk
+    const apiKey = process.env.GEMINI_API_KEY
     if (!apiKey) {
       return NextResponse.json({ error: "GEMINI_API_KEY environment variable is not set" }, { status: 500 })
     }
